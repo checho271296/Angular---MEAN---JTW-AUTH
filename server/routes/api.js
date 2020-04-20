@@ -3,6 +3,8 @@ const router = express.Router()
 const mongoose = require('mongoose')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
+const bcrypt = require("bcrypt")
+const saltRounds = 10;
 
 const db = 'mongodb+srv://checho2712:serf2712@eventsdb-hw9ry.mongodb.net/eventsdb?retryWrites=true&w=majority'
 
@@ -34,18 +36,21 @@ router.get('/',(req,res) =>{
     res.send('From API route')
 })
 
-router.post('/register', (req, res) =>{
-    let userData = req.body
-    let user = new User(userData)
+router.post('/register', async (req, res) =>{
+    req.body.password = bcrypt.hashSync(req.body.password, 10);
+    let  user = new User(req.body);
+    
+   
     user.save((error,registeredUser)=>{
-        if(error){
-            console.log(error)
-        }else{
-            let payload = {subject: registeredUser._id}
-            let token = jwt.sign(payload,'secretKey')
-            res.status(200).send({token})
-        }
-    })
+    if(error){
+        console.log(error)
+    }else{
+        let payload = {subject: registeredUser._id}
+        let token = jwt.sign(payload,'secretKey')
+        res.status(200).send({token})
+    }
+})
+    
 })
 
 router.post('/login',(req,res) => {
@@ -57,7 +62,7 @@ router.post('/login',(req,res) => {
             if(!user){
                 res.status(401).send('Invalid email')
             }else{
-                if(user.password !== userData.password){
+                if(!bcrypt.compareSync(userData.password, user.password)){
                     res.status(401).send('Invalid password')
                 }else{
                     let payload = {subject: user._id}
