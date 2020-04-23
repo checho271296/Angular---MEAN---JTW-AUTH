@@ -9,14 +9,17 @@ export class AuthService {
 
   private _registerUrl = "http://localhost:3000/api/register";
   private _loginUrl = "http://localhost:3000/api/login"
+  
 
   constructor(private http: HttpClient, private _router: Router) { }
 
   register(user){
+    
     return this.http.post<any>(this._registerUrl,user)
   }
 
   login(user){
+  
     return this.http.post<any>(this._loginUrl,user)
   }
 
@@ -26,10 +29,16 @@ export class AuthService {
 
   logoutUser(){
     localStorage.removeItem('token')
-    this._router.navigate(['./events'])
+    localStorage.removeItem('userName')
+    this._router.navigate(['./home'])
   }
 
   getToken(){
     return localStorage.getItem('token')
   }
+
+  getUser(){
+    return localStorage.getItem('_id')
+  }
+
 }

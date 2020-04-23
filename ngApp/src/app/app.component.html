@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Eventhub</a>
+  <a class="navbar-brand" href="#">MY CALENDAR</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -7,16 +7,20 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item ">
-        <a class="nav-link" routerLink= "/events" routerLinkActive = "active" href="#">Events</a>
+        <a class="nav-link" routerLink= "/home" routerLinkActive = "active" href="#">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink= "/special" routerLinkActive = "active">Members</a>
+        <a class="nav-link" routerLink= "/special/{{authService.getUser()}}" routerLinkActive = "active">My Events</a>
+      </li>
+      <li class="nav-item">
+        
+        <a *ngIf= "authService.loggedIn()"  class= "nav-link" routerLink= "/profile/{{authService.getUser()}}" routerLinkActive >My profile</a>
       </li>
     </ul>
     <ul class="navbar-nav">
         <a *ngIf="!authService.loggedIn()"  routerLink= "/login"  routerLinkActive = "active"class="nav-link">Login</a>
         <a *ngIf="!authService.loggedIn()"  routerLink= "/register" routerLinkActive = "active" class="nav-link">Register</a>
-        <a *ngIf= "authService.loggedIn()"  class= "nav-link" style="cursor:pointer" (click)= "authService.logoutUser()" >Logout</a>
+        <a *ngIf= "authService.loggedIn()"  class= "nav-link" style="cursor:pointer" (click)= "authService.logoutUser()" >Logout</a>   
     </ul>  
   </div>
 </nav>

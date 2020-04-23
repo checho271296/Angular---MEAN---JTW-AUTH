@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const bcrypt = require("bcrypt")
-const saltRounds = 10;
+const Event = require('../models/event')
 
 const db = 'mongodb+srv://checho2712:serf2712@eventsdb-hw9ry.mongodb.net/eventsdb?retryWrites=true&w=majority'
 
@@ -15,6 +15,8 @@ mongoose.connect(db,err =>{
         console.log('Connected to mongodb')
     }
 })
+
+// USER AND LOGIN
 
 function verifyToken(req,res,next){
     if(!req.headers.authorization){
@@ -37,20 +39,27 @@ router.get('/',(req,res) =>{
 })
 
 router.post('/register', async (req, res) =>{
-    req.body.password = bcrypt.hashSync(req.body.password, 10);
-    let  user = new User(req.body);
-    
-   
-    user.save((error,registeredUser)=>{
-    if(error){
-        console.log(error)
-    }else{
-        let payload = {subject: registeredUser._id}
-        let token = jwt.sign(payload,'secretKey')
-        res.status(200).send({token})
-    }
-})
-    
+    User.findOne({email: req.body.email},(error,user) =>{
+        if(error){
+            console.log(error)
+        }else{
+            if(user){
+                res.status(500).send('User already exist!')
+            }else{
+                req.body.password = bcrypt.hashSync(req.body.password, 10);
+                let  user = new User(req.body);
+                user.save((error,registeredUser)=>{
+                    if(error){
+                        console.log(error)
+                    }else{
+                        let payload = {subject: registeredUser._id}
+                        let token = jwt.sign(payload,'secretKey')
+                        res.status(200).send({token,user})
+                    }
+                })
+            }
+        }
+    })    
 })
 
 router.post('/login',(req,res) => {
@@ -67,26 +76,72 @@ router.post('/login',(req,res) => {
                 }else{
                     let payload = {subject: user._id}
                     let token = jwt.sign(payload,'secretKey')
-                    res.status(200).send({token})
+                    res.status(200).send({token,user})
                 }
             }
         }
     })
 })
 
-router.get('/events', (req,res)=>{
-    let events = [{"_id": "1","name":"Auto expo","description": "BMW Special Sales","date":"2012-04-23T18:25:43.511Z"},{
-    "_id": "2","name":"Concert","description": "Linking Park concert","date":"2012-04-23T18:25:43.511Z"}
-    ]
-    
-    res.json(events)
+
+
+
+
+router.get('/profile/:id', (req,res) =>{
+    User.findOne({_id:req.params.id},  (err,user) => {
+        if(err){
+            console.log(err)
+            res.status(401).send("Invalid id")
+        }else{
+            res.json(user)
+        }
+    })
 })
 
-router.get('/special', verifyToken, (req,res)=>{
-    let specialEvents =  [{"_id": "1","name":"Auto expo","description": "BMW Special Sales","date":"2012-04-23T18:25:43.511Z"},{
-        "_id": "2","name":"Concert","description": "Linking Park concert","date":"2012-04-23T18:25:43.511Z"}
-        ]
-    res.json(specialEvents)
+router.put('/profile/:_id', (req,res) => {
+    User.findByIdAndUpdate({_id:req.params._id}, req.body, {new: true},(err,user) =>{
+        if(err){
+            console.log(err)
+            res.status(401).send("Invalid id")
+        }else{
+            res.send({user})
+        }
+    })
 })
+
+/// EVENTS
+
+router.post('/event',(req,res)=> {
+    Event.findOne({name:req.body.name},(err,event)=>{
+        if(err){
+            console.log(err)
+        }else{
+            if (event){
+                res.status(500).send(" Event already exist")
+            }else{
+                let event = new Event(req.body);
+                event.save((err,eventRegistered)=>{
+                    if(err){
+                        console.log(err)
+                    }else{
+                        res.status(200).send({eventRegistered})
+                    }
+                })
+            }
+        }
+    })
+})
+
+router.get('/special/:idUser', verifyToken, (req,res)=>{
+    Event.findOne({idUser: req.params.idUser}, (err,event) =>{
+        if(err){
+            console.log(err)
+            res.status(401).send("Invalid id")
+        }else{
+            res.json([event])
+        }
+    })
+})
+
 
 module.exports = router

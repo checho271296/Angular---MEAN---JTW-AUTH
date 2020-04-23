@@ -8,21 +8,23 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
-import { EventsComponent } from './events/events.component';
 import { SpecialEventsComponent } from './special-events/special-events.component';
 
-import {AuthService} from './auth.service';
-import { EventService } from './event.service';
-import {TokenInterceptorService} from './token-interceptor.service';
+import {AuthService} from './services/auth.service';
+import { EventService } from './services/event.service';
+import {TokenInterceptorService} from './services/token-interceptor.service';
 import { AuthGuard } from './auth.guard';
+import { UserProfileComponent } from './user-profile/user-profile.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RegisterComponent,
     LoginComponent,
-    EventsComponent,
-    SpecialEventsComponent
+    SpecialEventsComponent,
+    UserProfileComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
