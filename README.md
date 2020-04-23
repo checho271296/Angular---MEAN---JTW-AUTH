@@ -1,30 +1,16 @@
 # Angular-MEAN-Authentication
 
-This project was generated with Angular CLI version 9.0.3.
+This project was created with the purpose of increasing knowledge in the Angular framework, in addition to how to handle JTW Authentication, at the Frontend level as Backend.
 
-Server -> MongoDB
+As backend, Express was used with a non-relational MongoDB database.
 
-Backend -> Build with Express 
-
-Authenticacion -> JWT Authentication
+The purpose of the page is that any user who wishes to register can handle different events of their own!
 
 
 Development Frontend
 
 
 Run ng serve for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
-
-
-Build
-
-
-Run ng build to build the project. The build artifacts will be stored in the dist/ directory. Use the --prod flag for a production build.
-
-
-Further help
-
-To get more help on the Angular CLI use ng help or go check out the Angular CLI README.
-
 
 
 Development Server
