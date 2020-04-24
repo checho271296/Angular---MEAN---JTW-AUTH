@@ -1,7 +1,30 @@
 <div class="row mt-5">
     <div class="col-md-12">
-        <div class="col-md-2">      
-            <button type="button" class="btn btn-primary">Create new event</button>
+        <div class="col-md-2">  
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Create new event
+                </button>
+                <form class="dropdown-menu p-4" aria-labelledby="dropdownMenu2">
+                    <div class="form-group">
+                      <label for="exampleDropdownFormEmail2">Name</label>
+                      <input type="text" class="form-control" id="exampleDropdownFormEmail2" >
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleDropdownFormPassword2">Description</label>
+                      <input type="text" class="form-control" id="exampleDropdownFormPassword2" >
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="exampleDropdownFormPassword2" >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleDropdownFormPassword2">Date</label>
+                        <input type="date" class="form-control" id="exampleDropdownFormPassword2" >
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">Save</button>
+                  </form>
+              </div>
         </div>
     </div>
 </div>
@@ -12,7 +35,7 @@
                 <h5 class="card-tittle">{{event.name}}</h5>
                 <p class="card-text">{{event.description}}</p>
                 <a href="#" class="btn btn-success mr-2">Edit</a>
-                <a href="#" class="btn btn-danger">Delete</a>
+                <a  class="btn btn-danger" (click)="deleteEvent(event.name)" >Delete</a>
             </div>
             <div class="card-footer text-muted">
                 {{event.date | date:'shortDate'}}

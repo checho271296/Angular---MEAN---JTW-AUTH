@@ -111,7 +111,7 @@ router.put('/profile/:_id', (req,res) => {
 
 /// EVENTS
 
-router.post('/event',(req,res)=> {
+router.post('/special/:idUser',(req,res)=> {
     Event.findOne({name:req.body.name},(err,event)=>{
         if(err){
             console.log(err)
@@ -132,16 +132,29 @@ router.post('/event',(req,res)=> {
     })
 })
 
-router.get('/special/:idUser', verifyToken, (req,res)=>{
-    Event.findOne({idUser: req.params.idUser}, (err,event) =>{
+router.get('/special/:idUser', verifyToken,(req,res)=>{
+    Event.find({idUser: req.params.idUser}, (err,event) =>{
         if(err){
             console.log(err)
             res.status(401).send("Invalid id")
         }else{
-            res.json([event])
+            res.json(event)
         }
     })
 })
+
+router.delete('/special/:idUser',verifyToken, (req,res)=>{
+    Event.findOneAndRemove({name: req.params.idUser}, (err,event) =>{
+        if(err){
+            console.log(err)
+            res.status(401).send("Invalid id")
+        }else{
+            res.json(event)
+        }
+    })
+})
+
+
 
 
 module.exports = router

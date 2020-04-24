@@ -10,12 +10,15 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./special-events.component.scss']
 })
 export class SpecialEventsComponent implements OnInit {
-
   specialEvents = []
   idUser = ""
   constructor(private _eventService: EventService,private _router: Router,private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.getEvents();
+  }
+
+  getEvents(){
     this.route.params.subscribe(params =>{
       this._eventService.getSpecialEvents(params['idUser'])
         .subscribe(
@@ -26,10 +29,25 @@ export class SpecialEventsComponent implements OnInit {
                 this._router.navigate(['/login'])
               }
             }
-          }
-          
+          } 
         );
     })
+  }
+
+  deleteEvent(event:String){
+    let eventToDelete = this.specialEvents.find(element => element.name === event)
+    this._eventService.deleteEvent(eventToDelete)
+      .subscribe(
+        res => this.getEvents()
+        ,
+        err => {
+          if(err instanceof HttpErrorResponse){
+            if( err.status === 401){
+              this._router.navigate(['/login'])
+            }
+          }
+        } 
+      );
   }
 
 }
