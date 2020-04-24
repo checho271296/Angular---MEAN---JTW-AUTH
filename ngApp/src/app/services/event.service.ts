@@ -24,5 +24,9 @@ export class EventService {
   
   }
 
+  createEvent(idUser:String,event){
+    return  this.http.post<any>(this._specialEventsUrl+`${idUser}`,event)
+  }
+
   
 }

@@ -3,6 +3,7 @@ import {EventService} from '../services/event.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import {Router} from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-special-events',
@@ -12,7 +13,13 @@ import { ActivatedRoute } from '@angular/router';
 export class SpecialEventsComponent implements OnInit {
   specialEvents = []
   idUser = ""
-  constructor(private _eventService: EventService,private _router: Router,private route: ActivatedRoute) { }
+  eventData = {
+    "name": "",
+    "description": "",
+    "idUser" : this.authService.getUser(),
+    "date": ""
+  }
+  constructor(private _eventService: EventService,private _router: Router,private route: ActivatedRoute,public authService : AuthService) { }
 
   ngOnInit(): void {
     this.getEvents();
@@ -50,4 +57,18 @@ export class SpecialEventsComponent implements OnInit {
       );
   }
 
+  createEvent(){
+    console.log(this.eventData);
+    
+    this.route.params.subscribe(params =>{
+      this._eventService.createEvent(params['idUser'],this.eventData)
+        .subscribe(
+          res => {
+            this.getEvents()
+            console.log(res)
+          },
+          err => console.log(err)
+        )
+    })
+  }
 }
