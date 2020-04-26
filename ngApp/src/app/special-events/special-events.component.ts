@@ -29,7 +29,9 @@ export class SpecialEventsComponent implements OnInit {
     this.route.params.subscribe(params =>{
       this._eventService.getSpecialEvents(params['idUser'])
         .subscribe(
-          res => this.specialEvents = res,
+          res => {
+            this.specialEvents = res
+            console.log("ASR",this.specialEvents)},
           err => {
             if(err instanceof HttpErrorResponse){
               if( err.status === 401){
@@ -41,16 +43,16 @@ export class SpecialEventsComponent implements OnInit {
     })
   }
 
-  deleteEvent(event:String){
+  deleteEvent(event:any){
     let eventToDelete = this.specialEvents.find(element => element.name === event)
-    this._eventService.deleteEvent(eventToDelete)
+    this._eventService.deleteEvent(eventToDelete._id)
       .subscribe(
         res => this.getEvents()
         ,
         err => {
           if(err instanceof HttpErrorResponse){
             if( err.status === 401){
-              this._router.navigate(['/login'])
+              console.log(err);  
             }
           }
         } 
@@ -58,8 +60,6 @@ export class SpecialEventsComponent implements OnInit {
   }
 
   createEvent(){
-    console.log(this.eventData);
-    
     this.route.params.subscribe(params =>{
       this._eventService.createEvent(params['idUser'],this.eventData)
         .subscribe(
@@ -70,5 +70,11 @@ export class SpecialEventsComponent implements OnInit {
           err => console.log(err)
         )
     })
+    this.eventData = {
+      "name": "",
+      "description": "",
+      "idUser" : this.authService.getUser(),
+      "date": ""
+    }
   }
 }

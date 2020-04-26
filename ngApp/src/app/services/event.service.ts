@@ -19,8 +19,8 @@ export class EventService {
     return this.http.get<any>(this._specialEventsUrl+`${idUser}`)
   }
 
-  deleteEvent(eventName: any){
-    return this.http.delete<any>(this._specialEventsUrl+`${eventName.name}`)
+  deleteEvent(eventId: string){
+    return this.http.delete<any>(this._specialEventsUrl+`${eventId}`)
   
   }
 

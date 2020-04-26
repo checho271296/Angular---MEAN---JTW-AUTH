@@ -111,14 +111,15 @@ router.put('/profile/:_id', (req,res) => {
 
 /// EVENTS
 
-router.post('/special/:idUser',(req,res)=> {
-    Event.findOne({name:req.body.name},(err,event)=>{
+router.post('/special/:idUser',verifyToken,(req,res)=> {
+    Event.findOne({name:req.body.name,idUser:req.params.idUser},(err,result)=>{
         if(err){
             console.log(err)
         }else{
-            if (event){
-                res.status(500).send(" Event already exist")
+            if (result){
+                res.status(500).send("Event already exist!")
             }else{
+
                 let event = new Event(req.body);
                 event.save((err,eventRegistered)=>{
                     if(err){
@@ -143,8 +144,8 @@ router.get('/special/:idUser', verifyToken,(req,res)=>{
     })
 })
 
-router.delete('/special/:idUser',verifyToken, (req,res)=>{
-    Event.findOneAndRemove({name: req.params.idUser}, (err,event) =>{
+router.delete('/special/:id', verifyToken,(req,res)=>{
+    Event.findOneAndRemove({_id: req.params.id}, (err,event) =>{
         if(err){
             console.log(err)
             res.status(401).send("Invalid id")
@@ -154,6 +155,15 @@ router.delete('/special/:idUser',verifyToken, (req,res)=>{
     })
 })
 
+router.put('/special/:id',(req,res)=>{
+    Event.findByIdAndUpdate({_id:req.params.id},req.body, {new: true},(err,event)=>{
+        if(err){
+            res.status(401).send("Invalid event")
+        }else{
+            res.send(event)
+        }
+    })
+})
 
 
 
