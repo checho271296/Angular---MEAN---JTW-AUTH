@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-12 mt-5">
     <img src="assets/images/img2.jpg" class="d-block w-100" alt="...">
   </div>
 </div>
@@ -8,12 +8,12 @@
     <h5 class="text-info ">MANAGE YOUR OWN EVETNS</h5>
     <p class="text-info">You can create,edit,delete your events!</p>
   </div>
-  <div class="vol-md-6">
-    <h5 class="text-info">CREATE YOUR ACCOUNT</h5>
-    <a routerLink= "/register">
-      <a routerLink = "/register">
+  <div class="col-md-6">
+    <h5 *ngIf="!authService.loggedIn()" class="text-info">CREATE YOUR ACCOUNT</h5>
+    <a *ngIf="!authService.loggedIn()" routerLink= "/register">
         <p class="text-info">Sing up, to get access to all services!</p>
-      </a>
     </a>
+    <h5 *ngIf="authService.loggedIn()" class="text-info">START TO BUILDING YOUR CALENDAR</h5>
+    <p *ngIf="authService.loggedIn()" class="text-info">Go to "My events" and start builing your calendar!</p>
   </div>
 </div>
