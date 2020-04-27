@@ -28,6 +28,8 @@
 </div>
 
 
+
+
 <div class="card text-center text-info border-info mt-5" *ngFor="let event of specialEvents">
     <div class="card-header">
         {{event.name}}
@@ -36,9 +38,18 @@
         <h5 class="card-title">Description:</h5>
         <p class="card-text">{{event.description}}</p>
         <!-- <a   class="btn btn-success mr-2 text-white">Edit</a> -->
-    <a  class="btn btn-danger text-white" (click)="deleteEvent(event.name)" >Delete</a>
+    <a  class="btn btn-danger text-white" (click)="deleteEvent(event.name)" data-toggle="modal" data-target=".bd-example-modal-sm">Delete</a>
     </div>
     <div class="card-footer text-muted">
         {{event.date | date:'shortDate'}}
+    </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-sm text-danger text-center" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        Event deleted!!
+      </div>
     </div>
 </div>

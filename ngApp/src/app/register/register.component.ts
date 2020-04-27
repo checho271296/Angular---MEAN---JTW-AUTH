@@ -16,21 +16,29 @@ export class RegisterComponent implements OnInit {
     "email": "",
     "password": ""
   };
+  errMessage = ""
+  err = false
   constructor(private _auth: AuthService, private _router: Router) { }
 
   ngOnInit(): void {
   }
-
+  
   registerUser(){
+    
     this._auth.register(this.registerUserData)
       .subscribe(
           res => {
+            
             console.log(res)
             localStorage.setItem('token',res.token)
             localStorage.setItem('_id',res.user._id)
             this._router.navigate(['/home'])
           },
-          err => console.log(err)        
+          err => {
+              this.err = !this.err
+              this.errMessage = err.error.text
+              
+          }       
       )
     
   }

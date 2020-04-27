@@ -25,13 +25,20 @@
                         </div>
                         <div class="form-group">
                             <label for ="">Email</label>
-                            <input [(ngModel)] ="registerUserData.email" name="email" type="text" class="form-control rounded-0" required>
+                            <input [(ngModel)] ="registerUserData.email" name="email" type="text" class="form-control rounded-0" pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" required >
                         </div>
                     </form>
                 </fieldset>
                 <button *ngIf = "!updateFlag" type ="button" class="btn btn-primary float-right ml-2"  (click)= "chageStatus()" >Edit</button>
-                <button *ngIf = "updateFlag"  type ="button" class="btn btn-success float-right"  (click) = "updateUser()" >Save</button>
+                <button *ngIf = "updateFlag"  type ="button" class="btn btn-success float-right"  (click) = "updateUser()" data-toggle="modal" data-target=".bd-example-modal-sm" >Save</button>
                 <button *ngIf = "updateFlag"  type ="button" class="btn btn-danger float-right mr-2"  (click) = "chageStatus()" >Cancel</button>
+                <div class="modal fade bd-example-modal-sm text-danger text-center" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" role="document">
+                      <div class="modal-content">
+                        User Updated!!
+                      </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

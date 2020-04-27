@@ -5,7 +5,7 @@ const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const bcrypt = require("bcrypt")
 const Event = require('../models/event')
-
+const { check, validationResult } = require('express-validator');
 const db = 'mongodb+srv://checho2712:serf2712@eventsdb-hw9ry.mongodb.net/eventsdb?retryWrites=true&w=majority'
 
 mongoose.connect(db,err =>{
@@ -38,28 +38,36 @@ router.get('/',(req,res) =>{
     res.send('From API route')
 })
 
-router.post('/register', async (req, res) =>{
-    User.findOne({email: req.body.email},(error,user) =>{
-        if(error){
-            console.log(error)
-        }else{
-            if(user){
-                res.status(500).send('User already exist!')
+router.post('/register', [
+    check('password').isLength({ min: 8 }),
+    check('email').isEmail()
+  ],async (req, res) =>{
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.send("Email or password do not meet the requirements, or there are black spaces. Please check!")
+    }else{
+        User.findOne({email: req.body.email},(error,user) =>{
+            if(error){
+                console.log(error)
             }else{
-                req.body.password = bcrypt.hashSync(req.body.password, 10);
-                let  user = new User(req.body);
-                user.save((error,registeredUser)=>{
-                    if(error){
-                        console.log(error)
-                    }else{
-                        let payload = {subject: registeredUser._id}
-                        let token = jwt.sign(payload,'secretKey')
-                        res.status(200).send({token,user})
-                    }
-                })
+                if(user){
+                    res.status(500).send('User already exist!')
+                }else{
+                    req.body.password = bcrypt.hashSync(req.body.password, 10);
+                    let  user = new User(req.body);
+                    user.save((error,registeredUser)=>{
+                        if(error){
+                            console.log(error)
+                        }else{
+                            let payload = {subject: registeredUser._id}
+                            let token = jwt.sign(payload,'secretKey')
+                            res.status(200).send({token,user})
+                        }
+                    })
+                }
             }
-        }
-    })    
+        })    
+    }
 })
 
 router.post('/login',(req,res) => {
@@ -69,10 +77,10 @@ router.post('/login',(req,res) => {
             console.log(error)
         }else{
             if(!user){
-                res.status(401).send('Invalid email')
+                res.status(401).send('Incorrect email or password!!')
             }else{
                 if(!bcrypt.compareSync(userData.password, user.password)){
-                    res.status(401).send('Invalid password')
+                    res.status(401).send('Incorrect email or password!!')
                 }else{
                     let payload = {subject: user._id}
                     let token = jwt.sign(payload,'secretKey')
@@ -82,10 +90,6 @@ router.post('/login',(req,res) => {
         }
     })
 })
-
-
-
-
 
 router.get('/profile/:id', (req,res) =>{
     User.findOne({_id:req.params.id},  (err,user) => {

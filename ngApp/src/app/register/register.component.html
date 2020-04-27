@@ -24,13 +24,15 @@
                     </div>
                     <div class="form-group">
                         <label for ="">Email</label>
-                        <input [(ngModel)] ="registerUserData.email" name="email" type="text" class="form-control rounded-0" required>
+                        <input [(ngModel)] ="registerUserData.email" name="email" type="text" class="form-control rounded-0"  required >
                     </div>
                     <div class="form-group">
                         <label for ="">Password</label>
                         <input [(ngModel)] ="registerUserData.password" name="password"  type="password" class="form-control rounded-0" required>
                     </div>
-                    <button (click) = "registerUser()" type ="button" class="btn btn-primary float-right">Register</button>
+                    <button (click) = "registerUser()" type ="button" class="btn btn-primary float-right ml-3" data-toggle="modal" data-target=".bd-example-modal-sm">Register</button>
+                    <p *ngIf = "err" class="text-danger ">{{errMessage}}</p>
+                    <p *ngIf = "!err" class="text-info ">*Password must be a least 8 caracters!</p>
                 </form>
             </div>
         </div>
